@@ -40,7 +40,7 @@ app.use(function(err, req, res, next) {
 
 const senecaService = require('seneca')({ timeout: 5000 }).client({
   type: 'tcp',
-  // port: 10101,
+  port: 4002,
   host: '172.19.0.1',
   pin: 'role:app',
 }).quiet();

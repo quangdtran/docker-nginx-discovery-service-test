@@ -48,7 +48,7 @@ seneca
     seneca.listen(
       {
         type: 'tcp',
-        // port: 10101,
+        port: 4002,
         pin: 'role:app',
       },
       // { type: 'tcp', pin: 'role:app' },
