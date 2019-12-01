@@ -1,17 +1,19 @@
 {
-  "name": "app-api",
+  "name": "app",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./src/app.js -L"
+    "start": "nodemon ./src/app.js --legacy-watch"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "seneca": "^3.17.0",
+    "seneca-transport": "^4.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.1"

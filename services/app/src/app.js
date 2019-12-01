@@ -11,7 +11,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,4 +38,16 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(3000, () => console.log(`Serving on port ${3000}`));
+const senecaService = require('seneca')({ timeout: 5000 }).client({
+  type: 'tcp',
+  // port: 10101,
+  host: '172.19.0.1',
+  pin: 'role:app',
+}).quiet();
+const util = require('util');
+const senecaAct = util.promisify(senecaService.act.bind(senecaService));
+senecaAct({ role: 'app', action: 'test', body: { id: '123456' } })
+  .then((result) => console.log(result))
+  .catch((err) => console.log(err.toString()));
+
+app.listen(3001, () => console.log('API service on 3001'));

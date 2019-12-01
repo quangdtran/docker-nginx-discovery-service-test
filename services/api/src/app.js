@@ -4,6 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const seneca = require('seneca')().quiet();
+// const seneca = require('seneca')().quiet();
+const senecaPlugin = require('./plugins/crud.plugin');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -11,7 +15,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -38,4 +42,17 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(3001, () => console.log('API service on 3001'));
+seneca
+  .use(senecaPlugin)
+  .ready((err) => {
+    seneca.listen(
+      {
+        type: 'tcp',
+        // port: 10101,
+        pin: 'role:app',
+      },
+      // { type: 'tcp', pin: 'role:app' },
+      () => app.listen(3002, () => console.log(`Serving on port ${3002}`)),
+    );
+  });
+
