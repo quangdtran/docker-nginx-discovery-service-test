@@ -51,7 +51,7 @@ seneca
         {
           type: 'amqp',
           pin: 'service:api,action:*',
-          url: 'amqp://testuser:123456@rabbitmq:5672',
+          url: 'amqp://guest:guest@rabbitmq:5672',
         },
         () => app.listen(3002, () => console.log(`Serving on port ${3002}`)),
       );

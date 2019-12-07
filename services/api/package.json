@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./src/app.js --legacy-watch"
+    "start": "./node_modules/nodemon/bin/nodemon.js ./src/app.js --legacy-watch"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
