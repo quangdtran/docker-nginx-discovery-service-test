@@ -9,4 +9,5 @@ RUN npm audit fix
 
 ADD . .
 
+
 EXPOSE 3001
