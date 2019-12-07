@@ -23,12 +23,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -38,15 +38,16 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const senecaService = require('seneca')({ timeout: 5000 }).client({
-  type: 'tcp',
-  port: 4002,
-  host: '172.19.0.1',
-  pin: 'role:app',
-}).quiet();
+const senecaService = require('seneca')({ legacy: { meta: true } })
+  .use('seneca-amqp-transport')
+  .client({
+    type: 'amqp',
+    pin: 'service:api,action:*',
+    url: 'amqp://testuser:123456@rabbitmq:5672',
+  });
 const util = require('util');
 const senecaAct = util.promisify(senecaService.act.bind(senecaService));
-senecaAct({ role: 'app', action: 'test', body: { id: '123456' } })
+senecaAct({ service: 'api', action: 'test', body: { id: '123456' } })
   .then((result) => console.log(result))
   .catch((err) => console.log(err.toString()));
 

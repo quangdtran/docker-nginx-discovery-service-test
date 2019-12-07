@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-const seneca = require('seneca')().quiet();
+const seneca = require('seneca')();
 // const seneca = require('seneca')().quiet();
 const senecaPlugin = require('./plugins/crud.plugin');
 
@@ -27,12 +27,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -43,16 +43,17 @@ app.use(function(err, req, res, next) {
 });
 
 seneca
+  .use('seneca-amqp-transport')
   .use(senecaPlugin)
   .ready((err) => {
-    seneca.listen(
-      {
-        type: 'tcp',
-        port: 4002,
-        pin: 'role:app',
-      },
-      // { type: 'tcp', pin: 'role:app' },
-      () => app.listen(3002, () => console.log(`Serving on port ${3002}`)),
-    );
+    seneca
+      .listen(
+        {
+          type: 'amqp',
+          pin: 'service:api,action:*',
+          url: 'amqp://testuser:123456@rabbitmq:5672',
+        },
+        () => app.listen(3002, () => console.log(`Serving on port ${3002}`)),
+      );
   });
 

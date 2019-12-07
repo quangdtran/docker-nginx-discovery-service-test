@@ -7,7 +7,7 @@ const testData = {
 module.exports =  function app() {
   const seneca = this;
   // seneca.add = util.promisify(seneca.add);
-  seneca.add({ role: 'app', action: 'test' }, (req, done) => {
+  seneca.add({ service: 'api', action: 'test' }, (req, done) => {
     if (!req.body) return done(`body wasn't found`);
     const { id } = req.body;
     if (id !== testData.id) return done(`id wasn't found`, null);
