@@ -38,19 +38,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-const senecaService = require('seneca')({ legacy: { meta: true } })
-  .use('seneca-amqp-transport')
-  .client({
-    type: 'amqp',
-    pin: 'service:api,action:*',
-    url: 'amqp://guest:guest@rabbitmq:5672',
-  })
-  .ready(() => {
-    const util = require('util');
-    const senecaAct = util.promisify(senecaService.act.bind(senecaService));
-    senecaAct({ service: 'api', action: 'test', body: { id: '123456' } })
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err.toString()));
-    
-    app.listen(3001, () => console.log('API service on 3001'));
-  });
+app.listen(3001, () => console.log('API service on 3001'));
